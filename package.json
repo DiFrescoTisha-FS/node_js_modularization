@@ -1,0 +1,34 @@
+{
+  "name": "node_js_modularization",
+  "version": "1.0.0",
+  "description": "WDV3322_project",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "nodemon server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DiFrescoTisha-FS/node_js_modularization.git"
+  },
+  "keywords": [
+    "NodeJs",
+    "Modules"
+  ],
+  "author": "Tisha Di Fresco",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DiFrescoTisha-FS/node_js_modularization/issues"
+  },
+  "homepage": "https://github.com/DiFrescoTisha-FS/node_js_modularization#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^6.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
