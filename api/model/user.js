@@ -18,10 +18,10 @@ const userSchema = mongoose.Schema({
         type: String,
     },
     email: {
-        type: String,
+        type: String, required: true, unique: true
     },
     password: {
-        type: String,
+        type: String, required: true
     },
 });
 

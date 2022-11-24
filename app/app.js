@@ -1,33 +1,47 @@
 const express = require('express');
+const cors = require('cors');
 const routes = require('../api/routes/routes');
 const app = express();
 const mongoose = require('mongoose');
 require('dotenv').config();
+const bcrypt = require('bcrypt');
 
-// parsing without using body parser
-app.use(
-    express.urlencoded({
-        extended: true,
-    })
-);
-// all requests will handle json
 app.use(express.json());
+app.use(cors())
 
-// handle all CORS issues by supplying CORS headers
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-// res.header('Access-Control-Allow-Origin', 'http://someurl.com');
-// res.header('Access-Control-Allow-Origin', '*');
-    res.header(
-        'Access-Control-Allow-Headers',
-        'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-    );
+const user = {};
 
-    if (req.method === 'OPTIONS') {
-        res.header('Access-Control-Allow-Methods', 'POST, PUT, PATCH, GET, DELETE');
-    }
-    next();
+app.post('/signup', (req, res) => {
+    // req.body.password
+    bcrypt.hash(req.body.password, 10, (err, hash) => {
+        if (err) {
+            res.status(500).json({ message: err.message });
+        } else {
+            user.password = hash;
+            res.status(200).json({ password: hash });
+        }
+    });
 });
+
+app.post('/login', (req, res) => {
+    bcrypt.compare(req.body.password, user.password, (err, result) => {
+        if (err) return res.status(501).json({ message: err.message });
+
+        if(result){
+            res.status(200).json({
+                message: "Authorization Successful",
+                result: result,
+            });
+        } else {
+            res.status(401).json({
+                message: "Authorization Failed",
+                result: result,
+            })
+        }
+    });
+});
+
+app.use(express.json());
 
 // default route to get if service is up, (actuator)
 app.get('/', (req, res, next) => {
