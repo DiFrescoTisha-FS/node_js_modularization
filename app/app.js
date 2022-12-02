@@ -1,20 +1,18 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
 const cors = require('cors');
 const routes = require('../api/routes/routes');
 const app = express();
 const mongoose = require('mongoose');
 require('dotenv').config();
-const bcrypt = require('bcrypt');
 
 app.use(express.json());
-app.use(cors())
 
 const user = {};
 
 app.post('/signup', (req, res) => {
-    // req.body.password
     bcrypt.hash(req.body.password, 10, (err, hash) => {
-        if (err) {
+        if(err){
             res.status(500).json({ message: err.message });
         } else {
             user.password = hash;
@@ -25,23 +23,25 @@ app.post('/signup', (req, res) => {
 
 app.post('/login', (req, res) => {
     bcrypt.compare(req.body.password, user.password, (err, result) => {
-        if (err) return res.status(501).json({ message: err.message });
+        if (err) return res.status(501).json({
+            message: err.message
+        });
 
         if(result){
             res.status(200).json({
-                message: "Authorization Successful",
+                message: 'Authorization Successful',
                 result: result,
             });
         } else {
             res.status(401).json({
-                message: "Authorization Failed",
+                message: 'Authorization Failed',
                 result: result,
             })
         }
-    });
+    })
 });
 
-app.use(express.json());
+app.use(cors());
 
 // default route to get if service is up, (actuator)
 app.get('/', (req, res, next) => {
