@@ -3,30 +3,10 @@ const User = require('../model/user');
 const routes = express.Router();
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
+const { response } = require('express');
 // const { routes } = require('../../app/app');
 
 routes.post('/signup', async (req, res, next) => {
-    // 1). Look up if the user has already registered, are they in the database??
-    // 2). If you find a user object then return message: "Email Exists"
-    // 3). Else
-    // 4). encrypt password
-    // 5). Create our user object from mongoose schema
-    // 6). Save it to the database which returns a user object
-    // 7). Return the user properties back in the response, no password
-
-    // let user = await User.findOne({ email: req.body.email })
-    // if (user) {
-    //     return res.status(400).return('Authenticaionb - Failed');
-    // } else {
-    //     user = new User({
-    //         name: req.body.name,
-    //         email: req.body.email,
-    //         password: req.user.password,
-    //     }),
-    //     await user.save();
-    //     res.send(user);
-    // }
-
     // demo part
     // retrieve the firstName, email, password
     const firstName = req.body.firstName;
@@ -38,7 +18,8 @@ routes.post('/signup', async (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
     // encrypt my password
-    bcrypt.hash(password, 10, (err, hash) => {
+    bcrypt
+        .hash(password, 10, (err, hash) => {
         if(err){
             res.status(500).json({
                 error: err.message,
@@ -55,6 +36,26 @@ routes.post('/signup', async (req, res, next) => {
                 email: email,
                 password: hash,
             });
+
+            user
+                .save()
+                .then((result) => {
+                    response.status(201).send({
+                        message: "User Created Successfully",
+                        result,
+                    });
+                    console.log(result);
+                })
+                .catch((error) => {
+                    response.status(500).send({
+                        message: "User already exists",
+                        error,
+                    });
+                });
+                
+                
+
+            
             // save it to the database and it returns the user object
             // return it in the response
 
@@ -73,11 +74,16 @@ routes.post('/signup', async (req, res, next) => {
                 email: user.email,
                 password: hash,  // user.firstName once have the object
             });
+                
         }
     });
 });
 
 routes.post('/login', (req, res, next) => {
+    User.findOne({ email: req.body.email })
+        .then((user) => {
+
+        
     // 1). Find the user use email as the index
     // 2). if no user then return message authentication failed
     // 3). else
@@ -102,13 +108,14 @@ routes.post('/login', (req, res, next) => {
             res.status(501).json({ message: "Authenticaion Failed" });
         }
     });
+    });
     // console.log(`Hash: ${hash}`);
     // console.log(password)
 });
 
 
-routes.get('/profile', (req, res, next) => {
-    res.status(200).json({ message: '/profile - GET' });
-});
+// routes.get('/profile', (req, res, next) => {
+//     res.status(200).json({ message: '/profile - GET' });
+// });
 
 module.exports = routes;

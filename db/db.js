@@ -9,6 +9,7 @@ const findUser = async (obj) => {
 };
 
 const saveUser = async (user) => {
+    await user.save(obj);
 //     // pass in the user like above
 //     // user.save
 };
