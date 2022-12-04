@@ -3,23 +3,21 @@ const User = require('../model/user');
 const routes = express.Router();
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
-const { response } = require('express');
-// const { routes } = require('../../app/app');
 
-routes.post('/signup', async (req, res, next) => {
+routes.post('/signup', (req, res, next) => {
     // demo part
     // retrieve the firstName, email, password
+    
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
     const address = req.body.address;
     const city = req.body.city;
     const state = req.body.state;
-    const zip = req.body.state;
+    const zip = req.body.zip;
     const email = req.body.email;
     const password = req.body.password;
     // encrypt my password
-    bcrypt
-        .hash(password, 10, (err, hash) => {
+    bcrypt.hash(password, 10, (err, hash) => {
         if(err){
             res.status(500).json({
                 error: err.message,
@@ -36,45 +34,27 @@ routes.post('/signup', async (req, res, next) => {
                 email: email,
                 password: hash,
             });
-
-            user
-                .save()
+            user.save()
                 .then((result) => {
-                    response.status(201).send({
-                        message: "User Created Successfully",
-                        result,
-                    });
-                    console.log(result);
-                })
-                .catch((error) => {
-                    response.status(500).send({
-                        message: "User already exists",
-                        error,
-                    });
+                    res.status(201).json({
+                        message: "Signup - Successful",
+                        firstName: result.firstName,
+                        lastName: result.lastName,
+                        address: result.address,
+                        city: result.city,
+                        state: result.state,
+                        zip: result.zip,
+                        email: result.email,
                 });
-                
-                
-
-            
-            // save it to the database and it returns the user object
-            // return it in the response
-
-            // newUser.save()
-            // .then(result => {
-            //     console.log(result);
-            // })
-            res.status(201).json({
-                message: "Signup - Successful",
-                firstName: user.firstName,
-                lastName: user.lastName,
-                address: user.address,
-                city: user.city,
-                state: user.state,
-                zip: user.zip,
-                email: user.email,
-                password: hash,  // user.firstName once have the object
+            })
+            .catch((error) => {
+                res.status(500).json({
+                    message: 'User already exists',
+                    error,
+                })
             });
-                
+            // console.log(user);
+
         }
     });
 });
@@ -103,19 +83,24 @@ routes.post('/login', (req, res, next) => {
                 message: "Authentication Successful",
                 result: result,
                 firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                address: req.body.address,
+                city: req.body.city,
+                state: req.body.state,
+                zip: req.body.zip,
+                email: req.body.email,
+
             });
         } else {
             res.status(501).json({ message: "Authenticaion Failed" });
         }
     });
     });
-    // console.log(`Hash: ${hash}`);
-    // console.log(password)
 });
 
 
-// routes.get('/profile', (req, res, next) => {
-//     res.status(200).json({ message: '/profile - GET' });
-// });
+routes.get('/profile', (req, res, next) => {
+    res.status(200).json({ message: '/profile - GET' });
+});
 
 module.exports = routes;

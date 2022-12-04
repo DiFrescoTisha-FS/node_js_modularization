@@ -9,9 +9,9 @@ const findUser = async (obj) => {
 };
 
 const saveUser = async (user) => {
-    await user.save(obj);
+    await user.save();
 //     // pass in the user like above
 //     // user.save
 };
 
-module.exports = { connect, findUser, saveUser, disconnect };
+module.exports = { findUser, saveUser };
