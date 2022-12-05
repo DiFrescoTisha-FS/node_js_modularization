@@ -14,14 +14,18 @@ const userSchema = mongoose.Schema({
     city: {
         type: String,
     },
+    state: {
+        type: String,
+    },
+
     zip: {
         type: String,
     },
     email: {
-        type: String,
+        type: String, required: true, unique: true
     },
     password: {
-        type: String,
+        type: String, required: true
     },
 });
 
