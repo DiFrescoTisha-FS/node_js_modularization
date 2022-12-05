@@ -1,6 +1,8 @@
-// const User = require('../model/user');
+const mongoose = require("mongoose");
 
-// // all of these should only be one line of code
+const connect = async () => {
+    await mongoose.connect();
+}
 
 const findUser = async (obj) => {
     await User.findOne(obj).exec();
@@ -14,4 +16,8 @@ const saveUser = async (user) => {
 //     // user.save
 };
 
-module.exports = { findUser, saveUser };
+const disconnect = async () => {
+    await mongoose.connection.close()
+}
+
+module.exports = { connect, findUser, saveUser, disconnect };
