@@ -18,6 +18,7 @@ routes.post('/signup', (req, res, next) => {
     const password = req.body.password;
     // encrypt my password
     bcrypt.hash(password, 10, (err, hash) => {
+        console.log(hash);
         if(err){
             res.status(500).json({
                 error: err.message,
@@ -53,16 +54,13 @@ routes.post('/signup', (req, res, next) => {
                     error,
                 })
             });
-            // console.log(user);
-
-        }
+        };
     });
 });
 
 routes.post('/login', (req, res, next) => {
-    User.findOne({ email: req.body.email })
+   User.findOne({ email: req.body.email })
         .then((user) => {
-
         
     // 1). Find the user use email as the index
     // 2). if no user then return message authentication failed
@@ -74,30 +72,26 @@ routes.post('/login', (req, res, next) => {
     // 8). send response back with authentication successful
     // 9). and send the user object properties back except password
     // 10). if result is false return message authentication failed
-    bcrypt.compare(req.body.password, req.body.hash, function(err, result){
-        if(err) {
-            return res.status(501).json({message: err.message});
-        }
+    bcrypt.compare(req.body.password, user.password, (err, result) => {
+        if (err) return res.status(501).json({
+            message: err.message
+        });
         if(result){
-            res.status(201).json({
-                message: "Authentication Successful",
+            res.status(200).json({
+                message: 'Authorization Successful',
                 result: result,
                 firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                address: req.body.address,
-                city: req.body.city,
-                state: req.body.state,
-                zip: req.body.zip,
                 email: req.body.email,
-
             });
         } else {
-            res.status(501).json({ message: "Authenticaion Failed" });
+            res.status(401).json({
+                message: 'Authorization Failed',
+                result: result,
+            });
         }
     });
     });
 });
-
 
 routes.get('/profile', (req, res, next) => {
     res.status(200).json({ message: '/profile - GET' });
