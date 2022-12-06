@@ -21,7 +21,8 @@ routes.post('/signup', (req, res, next) => {
         console.log(hash);
         if(err){
             res.status(500).json({
-                error: err.message,
+                message: err.message
+                // error: err.message,
             });
         } else {
             const user = new User({
