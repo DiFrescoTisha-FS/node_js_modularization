@@ -1,7 +1,13 @@
 const mongoose = require("mongoose");
 
 const connect = async () => {
-    await mongoose.connect();
+    console.log('Connecting');
+    await mongoose.connect('mongodb://localhost:27017/dbTest');    
+}
+
+const postUser = async (user) => {
+    console.log('Saving')
+    return await user.save();
 }
 
 const findUser = async (obj) => {
@@ -17,7 +23,8 @@ const saveUser = async (user) => {
 };
 
 const disconnect = async () => {
-    await mongoose.connection.close()
-}
+    console.log("Disconnecting");    
+    await mongoose.connection.close();
+};
 
-module.exports = { connect, findUser, saveUser, disconnect };
+module.exports = { connect, postUser, findUser, disconnect, saveUser };
