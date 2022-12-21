@@ -60,8 +60,8 @@ routes.post('/signup', (req, res, next) => {
 });
 
 routes.post('/login', (req, res, next) => {
-   User.findOne({ email: req.body.email })
-        .then((user) => {
+//    User.findOne({ email: req.body.email })
+//         .then((user) => {
         
     // 1). Find the user use email as the index
     // 2). if no user then return message authentication failed
@@ -92,7 +92,7 @@ routes.post('/login', (req, res, next) => {
         }
     });
     });
-});
+// });
 
 routes.get('/profile', (req, res, next) => {
     res.status(200).json({ message: '/profile - GET' });

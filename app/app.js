@@ -70,6 +70,7 @@ app.use((error, req, res, next) => {
 });
 
 // connect to mongodb
+mongoose.set('strictQuery', false);
 mongoose.connect(process.env.mongoDBURL, (err) => {
     if (err) {
         console.error('Error: ', err.message);
